@@ -1,0 +1,40 @@
+*{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+body{
+    margin: 0px;
+}
+
+main {
+    margin: 0px;
+    color:whitesmoke;
+    background-color: black;
+    min-height: 75vh;
+}
+
+main{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.canvas{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.catCard{
+    padding: 30px;
+}
+
+h1{
+    text-align: center;
+}
+
+#gif {
+    height: 150px;
+    width: 150px;
+}
+
