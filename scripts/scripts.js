@@ -21,8 +21,8 @@ function printCategories(cat, canvas) {
         card.setAttribute("class", "catCard")
         card.innerHTML = 
             `<h3>${bookCategories[i].display_name}</h3>
-            <p>Last published: ${bookCategories[i].newest_publised_date}</p>
-            <p>Oldest Published: ${bookCategories[i].oldest_publised_date}</p>
+            <p>Last published: ${bookCategories[i].newest_published_date}</p>
+            <p>Oldest Published: ${bookCategories[i].oldest_published_date}</p>
             <p>This list is updated ${bookCategories[i].updated}</p>
             <a href="" target="_blank">READ MORE >></a>`
         canvas.appendChild(card);
