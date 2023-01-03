@@ -1,16 +1,32 @@
-let canvas = document.querySelector(".canvas");
+let canvasCategories = document.querySelector(".canvasCat");
+let canvasBooks = document.querySelector(".canvasBooks")
 const arrayCategories = [];
+const arrayBooks = [];
+const botones = [];
 
 async function getCategories() {
     let resp = await fetch ("https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A");
     let categories = await resp.json();
     document.getElementById("gif").style.display = "none";
     console.log(categories)
-    printCategories(categories, canvas)
+    printCategories(categories, canvasCategories)
+    buttonEvent();
 }
 
-function printCategories(cat, canvas) {
-    let bookCategories = cat.results
+async function getBooks(catName){
+    document.querySelector(".canvasCat").style.display = "none";
+    document.getElementById("gif").style.display = "block";
+    let resp = await fetch (`https://api.nytimes.com/svc/books/v3/lists/current/${catName}.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A`);
+    let books = await resp.json();
+    document.getElementById("gif").style.display = "none";
+    console.log(books)
+    document.querySelector(".canvasBooks").style.display = "block";
+    printBooks(books, canvasBooks);
+    
+}
+
+function printCategories(categories, canvas) {
+    let bookCategories = categories.results
     
     for (let i = 0; i < bookCategories.length; i++){
         arrayCategories.push(bookCategories[i])
@@ -21,12 +37,43 @@ function printCategories(cat, canvas) {
         card.setAttribute("class", "catCard")
         card.innerHTML = 
             `<h3>${bookCategories[i].display_name}</h3>
-            <p>Last published: ${bookCategories[i].newest_publised_date}</p>
-            <p>Oldest Published: ${bookCategories[i].oldest_publised_date}</p>
+            <p>Last published: ${bookCategories[i].newest_published_date}</p>
+            <p>Oldest Published: ${bookCategories[i].oldest_published_date}</p>
             <p>This list is updated ${bookCategories[i].updated}</p>
-            <a href="" target="_blank">READ MORE >></a>`
+            <button class="readMore${i}">READ MORE</button>`
+        canvas.appendChild(card);
+        //document.querySelector(`.readMore${i}`).addEventListener("click", getBooks(bookCategories[i].list_name_encoded));
+    }
+}
+
+function printBooks(books, canvas) {
+    let bookList = books.results.books
+    
+    for (let i = 0; i < bookList.length; i++){
+        arrayBooks.push(bookList[i])
+    }
+
+    for (let i = 0; i < arrayBooks.length; i++){
+        let card = document.createElement("div")
+        card.setAttribute("class", "bookCard")
+        card.innerHTML = 
+            `<h3>#${arrayBooks[i].rank} ${arrayBooks[i].title}</h3>
+            <img src=${arrayBooks[i].book_image} alt=${bookList[i].title}>
+            <p>Weeks on chart: ${arrayBooks[i].weeks_on_list}</p>
+            <p>Description: ${bookList[i].description}</p>
+            <a href=${bookList[i].amazon_product_url} target="_blank"}>COMPRAR</a>`
         canvas.appendChild(card);
     }
 }
+
+function buttonEvent (){
+        for (let i = 0; i < arrayCategories.length; i++) {
+            let boton = document.querySelector(`.readMore${i}`);
+            botones.push(boton);
+    
+        }
+        botones.forEach((element, i) => element.addEventListener("click", function (){
+        getBooks(arrayCategories[i].list_name_encoded)}));
+        }
 
 getCategories()
