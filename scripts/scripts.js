@@ -20,8 +20,11 @@ async function getBooks(catName){
     let books = await resp.json();
     document.getElementById("gif").style.display = "none";
     console.log(books)
-    document.querySelector(".canvasBooks").style.display = "block";
+    document.querySelector(".canvasBooks").style.display = "flex";
+    document.querySelector(".canvasBooks").style.flexDirection = "column";
+    document.querySelector(".canvasBooks").style.justifyContent = "center";
     printBooks(books, canvasBooks);
+    document.querySelector(".bookCard").style.width = "75vw";
     
 }
 
@@ -42,7 +45,6 @@ function printCategories(categories, canvas) {
             <p>This list is updated ${bookCategories[i].updated}</p>
             <button class="readMore${i}">READ MORE</button>`
         canvas.appendChild(card);
-        //document.querySelector(`.readMore${i}`).addEventListener("click", getBooks(bookCategories[i].list_name_encoded));
     }
 }
 
@@ -58,10 +60,10 @@ function printBooks(books, canvas) {
         card.setAttribute("class", "bookCard")
         card.innerHTML = 
             `<h3>#${arrayBooks[i].rank} ${arrayBooks[i].title}</h3>
-            <img src=${arrayBooks[i].book_image} alt=${bookList[i].title}>
+            <img class="bookImg" src=${arrayBooks[i].book_image} alt=${bookList[i].title}>
             <p>Weeks on chart: ${arrayBooks[i].weeks_on_list}</p>
             <p>Description: ${bookList[i].description}</p>
-            <a href=${bookList[i].amazon_product_url} target="_blank"}>COMPRAR</a>`
+            <a href=${bookList[i].amazon_product_url} target="_blank"}>BUY</a>`
         canvas.appendChild(card);
     }
 }
@@ -77,3 +79,9 @@ function buttonEvent (){
         }
 
 getCategories()
+
+
+/*const signUp = document.querySelector(".signupbtn")
+signUp.addEventListener("click", function() {
+    handleSignUp() 
+})*/
