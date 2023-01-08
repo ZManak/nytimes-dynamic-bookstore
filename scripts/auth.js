@@ -8,7 +8,7 @@
   };
 
     firebase.initializeApp(firebaseConfig);
-    
+    const db = firebase.firestore();
     /*
     firebaseAuth = initializeAuth(firebaseApp, {
       persistence: browserSessionPersistence,

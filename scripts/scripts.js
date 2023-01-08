@@ -8,7 +8,6 @@ async function getCategories() {
     let resp = await fetch ("https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A");
     let categories = await resp.json();
     document.getElementById("gif").style.display = "none";
-    console.log(categories)
     printCategories(categories, canvasCategories)
     buttonEvent();
 }
@@ -19,7 +18,6 @@ async function getBooks(catName){
     let resp = await fetch (`https://api.nytimes.com/svc/books/v3/lists/current/${catName}.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A`);
     let books = await resp.json();
     document.getElementById("gif").style.display = "none";
-    console.log(books)
     document.querySelector(".canvasBooks").style.display = "flex";
     document.querySelector(".canvasBooks").style.flexDirection = "column";
     document.querySelector(".canvasBooks").style.justifyContent = "center";
@@ -63,7 +61,8 @@ function printBooks(books, canvas) {
             <img class="bookImg" src=${arrayBooks[i].book_image} alt=${bookList[i].title}>
             <p>Weeks on chart: ${arrayBooks[i].weeks_on_list}</p>
             <p>Description: ${bookList[i].description}</p>
-            <a href=${bookList[i].amazon_product_url} target="_blank"}>BUY</a>`
+            <a href=${bookList[i].amazon_product_url} target="_blank"}>BUY</a>
+            <button style = "button" id="addFav">Add to Favorites</button>`
         canvas.appendChild(card);
     }
 }
@@ -81,7 +80,6 @@ function buttonEvent (){
 getCategories()
 
 
-/*const signUp = document.querySelector(".signupbtn")
-signUp.addEventListener("click", function() {
-    handleSignUp() 
-})*/
+function addFavorites () {
+    
+}

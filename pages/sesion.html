@@ -15,16 +15,16 @@
     <h1>The New York Times GoodReads</h1>
   </header>
   <main class="log">
-    <form action="#" id="login" method="post">
+    <form action="#">
 
       <div class="container">
         <label for="uname"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="uname" required>
+        <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
 
         <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
-        <button type="submit">Login</button>
+        <button type="submit" id="login">Login</button>
       </div>
 
     </form>
@@ -43,8 +43,8 @@
         <label for="psw"><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="psw" id="password" required>
 
-        <label for="psw-repeat"><b>Repeat Password</b></label>
-        <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+        <label for="psw2"><b>Repeat Password</b></label>
+        <input type="password" placeholder="Repeat Password" name="psw2" id="password2" required>
 
         <!--<p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>-->
 
@@ -64,6 +64,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
   <script src="../scripts/authentication.js"></script>
+  <script src="../scripts/scripts.js"></script>
   </script>
 </body>
 
