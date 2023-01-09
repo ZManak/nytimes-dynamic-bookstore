@@ -4,6 +4,7 @@ const arrayCategories = [];
 const arrayBooks = [];
 const botones = [];
 
+
 async function getCategories() {
     let resp = await fetch ("https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A");
     let categories = await resp.json();
@@ -62,8 +63,17 @@ function printBooks(books, canvas) {
             <p>Weeks on chart: ${arrayBooks[i].weeks_on_list}</p>
             <p>Description: ${bookList[i].description}</p>
             <a href=${bookList[i].amazon_product_url} target="_blank"}>BUY</a>
-            <button style = "button" id="addFav">Add to Favorites</button>`
+            <button style = "button" id="addFav${i}">Add to Favorites</button>`
         canvas.appendChild(card);
+        const favBook = 
+            { title: bookList[i].title,
+            description: bookList[i].description,
+            buy: bookList[i].amazon_product_url}
+        const favButton = document.getElementById(`addFav${i}`)
+        favButton.addEventListener('click', function() {
+            addFav(firebase.auth().currentUser.uid, favBook)
+        })   
+            
     }
 }
 
@@ -80,6 +90,19 @@ function buttonEvent (){
 getCategories()
 
 
-function addFavorites () {
-    
-}
+
+function addFav(userID, bookObject) {
+    db.collection('users')
+        .where('id', '==', userID)
+        .get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                if (!doc.data().hasOwnProperty('favs')) {
+                    doc.ref.update({ favs: [bookObject] });
+                } else {
+                    doc.ref.update({ favs: doc.data().favs.concat(bookObject) })
+                }
+        alert('Added to Favorites')
+        }) });    
+    };
+

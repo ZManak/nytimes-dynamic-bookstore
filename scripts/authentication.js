@@ -9,6 +9,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);// Inicializaar app Firebase
 const db = firebase.firestore();
+
 const createUser = (user) => {
   db.collection("users")
     .add(user)
@@ -58,7 +59,7 @@ const signUpUser = (email, password) => {
       createUser({
         id: user.uid,
         email: user.email,
-        message: `Welcome ${user.email}`
+        favs: []
       })
       return user;
     })
@@ -77,6 +78,7 @@ const signInUser = (email, password) => {
       console.log(`se ha logado ${user.email} ID:${user.uid}`)
       alert(`se ha logado ${user.email} ID:${user.uid}`)
       console.log("USER", user);
+      console.log("Favoritos", user.favs)
       return user;
     })
     .catch((error) => {
@@ -97,24 +99,26 @@ const signOut = () => {
 }
 
 if (document.title === "Inicia Sesion") {
-  document.getElementById("login").addEventListener("click", () => {
+  document.getElementById("login").addEventListener("click", function () {
     let email = document.querySelector("#uname").value;
     let password = document.querySelector("#psw").value;
+    document.location.assign("../index.html");
     signInUser(email, password);
   })
 
-  document.getElementById("signup").addEventListener("click", function (event) {
-    event.preventDefault();
+  document.getElementById("signup").addEventListener("click", function () {
     let email = document.querySelector("#email").value;
     let pass = document.querySelector("#password").value;
-    signUpUser(email, pass)
+    signUpUser(email, pass);
   })
 }
 
 if (document.title === "NY Times Readings") {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      document.getElementById("iniciaSesion").innerHTML = `loged as ${user.email}`
+      let linkLogin = document.getElementById("iniciaSesion");
+      linkLogin.innerHTML = `Loged as ${user.email}`
+      linkLogin.href = "";
       document.getElementById("logout").addEventListener("click", function () {
       signOut();
     })} else {
@@ -123,14 +127,12 @@ if (document.title === "NY Times Readings") {
     }
   })};
 
-   
-
-
 // Listener de usuario en el sistema
 // Controlar usuario logado
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     console.log(`Está en el sistema:${user.email} ${user.uid}`);
+    console.log(`Favoritos: ${user}`)
   } else {
     console.log("no hay usuarios en el sistema");
   }
