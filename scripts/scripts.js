@@ -1,9 +1,10 @@
 let canvasCategories = document.querySelector(".canvasCat");
 let canvasBooks = document.querySelector(".canvasBooks")
+let canvasFavs = document.querySelector(".canvasFavs")
 const arrayCategories = [];
 const arrayBooks = [];
 const botones = [];
-
+const arrayFavs = [];
 
 async function getCategories() {
     let resp = await fetch ("https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A");
@@ -92,17 +93,48 @@ getCategories()
 
 
 function addFav(userID, bookObject) {
-    db.collection('users')
-        .where('id', '==', userID)
-        .get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
-                if (!doc.data().hasOwnProperty('favs')) {
-                    doc.ref.update({ favs: [bookObject] });
-                } else {
-                    doc.ref.update({ favs: doc.data().favs.concat(bookObject) })
-                }
+    getUserById(userID, (user) => {
+        if (!user.data().hasOwnProperty('favs')) {
+            user.ref.update({ favs: [bookObject] });
+        } else {
+            user.ref.update({ favs: user.data().favs.concat(bookObject) })
+        }
         alert('Added to Favorites')
-        }) });
-    };
+    })
+}
 
+function getFavs(userID) {
+    return new Promise((resolve, reject) => {
+        getUserById(userID).then((user) => {
+            resolve(user.data().favs)
+        }).catch((err) => reject(err))
+    })
+}
+
+function getUserById(userId) {
+    return new Promise((resolve, reject) => {
+        db.collection('users')
+            .where('id', '==', userId)
+            .get()
+            .then((snapshot) => {
+                snapshot.forEach((doc) => resolve(doc))
+            })
+            .catch((err) => { reject(err) })
+    })
+}
+
+function printFavs(favs) {
+    favs.forEach((fav) => {
+        let card = document.createElement("div")
+        card.setAttribute("class", "favCard")
+        card.innerHTML =
+            `<h3>#${fav.title}</h3>
+            <p>Description: ${fav.description}</p>
+            <a href=${fav.buy} target="_blank"}>BUY</a>`
+        canvasFavs.appendChild(card);
+    })
+}
+
+document.getElementById("favorites").addEventListener("click", () => {
+    getFavs(firebase.auth().currentUser.uid).then((favs) => printFavs(favs))
+})
