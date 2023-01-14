@@ -46,29 +46,34 @@ function readOne(id) {
 }
 
 const signUpUser = (email, password) => {
-  firebase
-    .auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      // Signed in
-      let user = userCredential.user;
-      console.log(`se ha registrado ${user.email} ID:${user.uid}`)
-      alert(`se ha registrado ${user.email} ID:${user.uid}`)
-      // ...
-      // Guarda El usuario en Firestore
-      createUser({
-        id: user.uid,
-        email: user.email,
-        favs: []
-      })
-      return user;
-    })
-    .catch((error) => {
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      console.log("Error en el sistema" + error.message);
-    });
+    firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Signed in
+            let user = userCredential.user;
+            console.log(`se ha registrado ${user.email} ID:${user.uid}`)
+            alert(`se ha registrado ${user.email} ID:${user.uid}`)
+            // ...
+            // Guarda El usuario en Firestore
+            createUser({
+                id: user.uid,
+                email: user.email
+            });
+        })
+        .catch((error) => {
+            let errorCode = error.code;
+            let errorMessage = error.message;
+            console.log("Error en el sistema" + error.message);
+        });
 };
+
+document.getElementById("signup").addEventListener("click", function () {
+    let email = document.querySelector("#email").value;
+    let pass = document.querySelector("#password").value;
+    signUpUser(email, pass)
+  })
+
 
 const signInUser = (email, password) => {
   firebase.auth().signInWithEmailAndPassword(email, password)
@@ -98,8 +103,7 @@ const signOut = () => {
   });
 }
 
-if (document.title === "Inicia Sesion") {
-  document.getElementById("login").addEventListener("click", function () {
+document.getElementById("login").addEventListener("click", function () {
     let email = document.querySelector("#uname").value;
     let password = document.querySelector("#psw").value;
     document.location.assign("../index.html");
@@ -111,28 +115,36 @@ if (document.title === "Inicia Sesion") {
     let pass = document.querySelector("#password").value;
     signUpUser(email, pass);
   })
+
+  function getAvatar(userID) {
+    return new Promise((resolve, reject) => {
+        getUserById(userID)
+            .then((user) => {
+                resolve(user.data().avatar)
+            }).catch((err) => reject(err))
+    })
 }
 
-if (document.title === "NY Times Readings") {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      let linkLogin = document.getElementById("iniciaSesion");
+      let linkLogin = document.getElementById("session");
       linkLogin.innerHTML = `Loged as ${user.email}`
-      linkLogin.href = "";
+      getAvatar(firebase.auth().currentUser.uid)
+        .then((avatar) => {printAvatar(avatar.pic)})
       document.getElementById("logout").addEventListener("click", function () {
       signOut();
     })} else {
-      document.getElementById("iniciaSesion").innerHTML = "Login/Sign Up";
+      document.getElementById("session").innerHTML = "Login/Sign Up";
       document.getElementById("logout").style.display = "none";
+      document.getElementById("addAvatar").style.display = "none";
     }
-  })};
+  });
 
 // Listener de usuario en el sistema
 // Controlar usuario logado
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     console.log(`Está en el sistema:${user.email} ${user.uid}`);
-    console.log(`Favoritos: ${user}`)
   } else {
     console.log("no hay usuarios en el sistema");
   }

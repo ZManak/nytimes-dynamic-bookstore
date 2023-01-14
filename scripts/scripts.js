@@ -1,23 +1,36 @@
 let canvasCategories = document.querySelector(".canvasCat");
 let canvasBooks = document.querySelector(".canvasBooks")
 let canvasFavs = document.querySelector(".canvasFavs")
+let login = document.getElementById("log")
 const arrayCategories = [];
 const arrayBooks = [];
 const botones = [];
 const arrayFavs = [];
 
+document.getElementById("back").addEventListener("click", () => {
+    canvasCategories.style.display = "flex"
+    document.location.reload("true");
+})
+
+document.getElementById("session").addEventListener("click", () => {
+    document.getElementById("log").style.display = "flex"
+    document.getElementById("log").style.flexDirection = "column"
+    canvasBooks.style.display = "none"
+    canvasCategories.style.display = "none"
+})
+
 async function getCategories() {
-    let resp = await fetch ("https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A");
+    let resp = await fetch("https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A");
     let categories = await resp.json();
     document.getElementById("gif").style.display = "none";
     printCategories(categories, canvasCategories)
     buttonEvent();
 }
 
-async function getBooks(catName){
+async function getBooks(catName) {
     document.querySelector(".canvasCat").style.display = "none";
     document.getElementById("gif").style.display = "block";
-    let resp = await fetch (`https://api.nytimes.com/svc/books/v3/lists/current/${catName}.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A`);
+    let resp = await fetch(`https://api.nytimes.com/svc/books/v3/lists/current/${catName}.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A`);
     let books = await resp.json();
     document.getElementById("gif").style.display = "none";
     document.querySelector(".canvasBooks").style.display = "flex";
@@ -31,11 +44,11 @@ async function getBooks(catName){
 function printCategories(categories, canvas) {
     let bookCategories = categories.results
 
-    for (let i = 0; i < bookCategories.length; i++){
+    for (let i = 0; i < bookCategories.length; i++) {
         arrayCategories.push(bookCategories[i])
     }
 
-    for (let i = 0; i < arrayCategories.length; i++){
+    for (let i = 0; i < arrayCategories.length; i++) {
         let card = document.createElement("div")
         card.setAttribute("class", "catCard")
         card.innerHTML =
@@ -51,11 +64,11 @@ function printCategories(categories, canvas) {
 function printBooks(books, canvas) {
     let bookList = books.results.books
 
-    for (let i = 0; i < bookList.length; i++){
+    for (let i = 0; i < bookList.length; i++) {
         arrayBooks.push(bookList[i])
     }
 
-    for (let i = 0; i < arrayBooks.length; i++){
+    for (let i = 0; i < arrayBooks.length; i++) {
         let card = document.createElement("div")
         card.setAttribute("class", "bookCard")
         card.innerHTML =
@@ -67,47 +80,50 @@ function printBooks(books, canvas) {
             <button style = "button" id="addFav${i}">Add to Favorites</button>`
         canvas.appendChild(card);
         const favBook =
-            { title: bookList[i].title,
+        {
+            title: bookList[i].title,
             description: bookList[i].description,
-            buy: bookList[i].amazon_product_url}
+            buy: bookList[i].amazon_product_url
+        }
         const favButton = document.getElementById(`addFav${i}`)
-        favButton.addEventListener('click', function() {
+        favButton.addEventListener('click', function () {
             addFav(firebase.auth().currentUser.uid, favBook)
         })
-
     }
+    scroll(0, 0)
 }
 
-function buttonEvent (){
-        for (let i = 0; i < arrayCategories.length; i++) {
-            let boton = document.querySelector(`.readMore${i}`);
-            botones.push(boton);
+function buttonEvent() {
+    for (let i = 0; i < arrayCategories.length; i++) {
+        let boton = document.querySelector(`.readMore${i}`);
+        botones.push(boton);
 
-        }
-        botones.forEach((element, i) => element.addEventListener("click", function (){
-        getBooks(arrayCategories[i].list_name_encoded)}));
-        }
+    }
+    botones.forEach((element, i) => element.addEventListener("click", function () {
+        getBooks(arrayCategories[i].list_name_encoded)
+    }));
+}
 
 getCategories()
 
-
-
 function addFav(userID, bookObject) {
-    getUserById(userID, (user) => {
-        if (!user.data().hasOwnProperty('favs')) {
-            user.ref.update({ favs: [bookObject] });
-        } else {
-            user.ref.update({ favs: user.data().favs.concat(bookObject) })
-        }
-        alert('Added to Favorites')
-    })
+    getUserById(userID)
+        .then((user) => {
+            if (!user.data().hasOwnProperty('favs')) {
+                user.ref.update({ favs: [bookObject] });
+            } else {
+                user.ref.update({ favs: user.data().favs.concat(bookObject) })
+            }
+            alert('Added to Favorites')
+        })
 }
 
 function getFavs(userID) {
     return new Promise((resolve, reject) => {
-        getUserById(userID).then((user) => {
-            resolve(user.data().favs)
-        }).catch((err) => reject(err))
+        getUserById(userID)
+            .then((user) => {
+                resolve(user.data().favs)
+            }).catch((err) => reject(err))
     })
 }
 
@@ -126,7 +142,7 @@ function getUserById(userId) {
 function printFavs(favs) {
     favs.forEach((fav) => {
         let card = document.createElement("div")
-        card.setAttribute("class", "favCard")
+        card.setAttribute("class", "bookCard")
         card.innerHTML =
             `<h3>#${fav.title}</h3>
             <p>Description: ${fav.description}</p>
@@ -135,6 +151,42 @@ function printFavs(favs) {
     })
 }
 
+function addAvatar(userID, url, callback) {
+    getUserById(userID)
+        .then((user) => {
+            if (!user.data().hasOwnProperty('avatar')) {
+                user.ref.update({ avatar: url });
+            } else {
+                user.ref.update({ avatar: url })
+            }
+        })
+        .then ((callback) => {callback})
+    alert('Added avatar')
+}
+
+const printAvatar = (url) => {
+    let picture = document.createElement("img");
+    picture.setAttribute('src', url);
+    picture.setAttribute('id', 'avatar');
+    picture.setAttribute('styles', 'max-width: 100px');
+    document.getElementById("pfp").appendChild(picture)
+}
+
+document.getElementById("addAvatar").addEventListener("click", () => {
+    const url = prompt("Introduce la url de tu foto");
+    addAvatar(firebase.auth().currentUser.uid, {
+        pic: url
+    }, 
+    printAvatar(url))
+}) 
+
 document.getElementById("favorites").addEventListener("click", () => {
-    getFavs(firebase.auth().currentUser.uid).then((favs) => printFavs(favs))
+    getFavs(firebase.auth().currentUser.uid).then((favs) => printFavs(favs));
+    canvasBooks.style.display = "none";
+    canvasCategories.style.display = "none"
+    login.style.display = "none"
+})
+
+document.getElementById("back").addEventListener("click", () => {
+    scroll(0, 0)
 })

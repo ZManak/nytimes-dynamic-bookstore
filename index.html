@@ -11,9 +11,11 @@
 <body>
     <header>
         <h1 id="NYT">The New York Times GoodReads</h1>
-        <a href="pages/sesion.html" id="iniciaSesion">Login/SignUp</a>
+        <article id="pfp"></article>
+        <button id="session">LOGIN</button>
         <button type="button" class="logout" id="logout">Log Out</button>
         <button type="button" class="favorites" id="favorites">Check Favorites</button>
+        <button id="addAvatar">Add Avatar</button>
     </header>
     <main>
         <div class="loading">
@@ -21,10 +23,50 @@
         </div>
         <section class="canvasCat">
         </section>
-        <section class="canvasBooks">
+        <section href="#books" class="canvasBooks">
         </section>
         <section class="canvasFavs">
         </section>
+        
+        <section id="log">
+            <form action="#">
+        
+              <div class="container">
+                <label for="uname"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
+        
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+        
+                <button type="submit" id="login">Login</button>
+              </div>
+        
+            </form>
+        
+            <h3>...or create an user...</h3>
+        
+            <form action="#" style="border:1px solid #ccc">
+              <div class="container">
+                <h1>Sign Up</h1>
+                <p>Please fill in this form to create an account.</p>
+                <hr>
+        
+                <label for="email"><b>Email</b></label>
+                <input type="text" placeholder="Enter Email" name="email" id="email" required>
+        
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" id="password" required>
+        
+                <!--<p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>-->
+        
+                <div class="clearfix">
+                  <button type="submit" class="signupbtn" id="signup">Sign Up</button>
+                </div>
+              </div>
+        
+            </form>
+        </section>
+        <button id="back">BACK</button>
     </main>
     <footer>
         <p>Made by ZManak / 2023</p>

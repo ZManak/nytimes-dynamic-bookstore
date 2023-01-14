@@ -39,6 +39,9 @@ footer{
     justify-content: center;
 }
 
+.log{
+  display: none;
+}
 .catCard{
     padding: 30px;
     margin: 20px;
@@ -124,8 +127,8 @@ form {
   }
   
   /* Avatar image */
-  img.avatar {
-    width: 40%;
+  img#avatar {
+    width: 30%;
     border-radius: 50%;
   }
   
