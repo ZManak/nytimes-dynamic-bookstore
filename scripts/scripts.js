@@ -34,10 +34,10 @@ async function getBooks(catName) {
     let books = await resp.json();
     document.getElementById("gif").style.display = "none";
     document.querySelector(".canvasBooks").style.display = "flex";
-    document.querySelector(".canvasBooks").style.flexDirection = "column";
+    document.querySelector(".canvasBooks").style.flexWrap = "wrap"
+    //document.querySelector(".canvasBooks").style.flexDirection = "column";
     document.querySelector(".canvasBooks").style.justifyContent = "center";
     printBooks(books, canvasBooks);
-    document.querySelector(".bookCard").style.width = "75vw";
 
 }
 
