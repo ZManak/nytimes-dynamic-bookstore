@@ -1,9 +1,5 @@
-@font-face {
-  font-family: 'Homemade Apple';
-  font-style: normal;
-  font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/homemadeapple/v18/Qw3EZQFXECDrI2q789EKQZJob0x6XHg.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+:root {
+  --coolGreen: #04AA6D;
 }
 
 * {
@@ -52,7 +48,7 @@ h1 {
 }
 
 button {
-  background-color: #04AA6D;
+  background-color: var(--coolGreen);
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -82,7 +78,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
+  text-align: justify;
   padding: 15px;
   border-radius: 15px;
   background-color: whitesmoke;
@@ -113,13 +109,6 @@ button:hover {
   display: none;
   width: 30%;
   border-radius: 50%;
-}
-
-#volver {
-  padding: 15px;
-  background-color: #f44336;
-  color: whitesmoke;
-  margin: 20px 0px 10px;
 }
 
 /*LOGS*/
@@ -198,6 +187,66 @@ input[type=password] {
   
   #avatar{
     max-width: 150px;
+  }
+  
+}
+
+@media screen and (min-width: 1024px){
+  h1{
+    font-size: 50px;
+  }
+
+  .navButton{
+    max-width: 25vw;
+  }
+  
+.canvasCat,
+.canvasBooks,
+.canvasFavs {
+  width: 90vw;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  padding: 15px;
+  gap: 10px;
+}
+
+.catCard,
+.bookCard {
+  width: 20vw;
+  padding: 15px;
+  border-radius: 15px;
+  background-color: whitesmoke;
+  color: black;
+}
+
+  #title{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  #titleLogo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  #NYTlogo{
+    width: 30vw;
+  }
+  
+  #avatar{
+    max-width: 150px;
+    border: 5px double black ;
   }
   
 }
