@@ -249,4 +249,8 @@ input[type=password] {
     border: 5px double black ;
   }
   
+  #gif{
+    width: 300px;
+    height: 300px;
+  }
 }
