@@ -120,6 +120,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     getAvatar(firebase.auth().currentUser.uid)
       .then((avatar) => { printAvatar(avatar.pic) })
     document.getElementById("avatar").style.display = "block"
+    document.getElementById("log").style.display = "none"
     document.getElementById("logout").addEventListener("click", function () {
       signOut();
     })

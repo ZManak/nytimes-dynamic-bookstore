@@ -74,8 +74,8 @@ function printBooks(books, canvas) {
         card.innerHTML =
             `<h3>#${arrayBooks[i].rank} ${arrayBooks[i].title}</h3>
             <img class="bookImg" src=${arrayBooks[i].book_image} alt=${bookList[i].title}>
-            <p>Weeks on chart: ${arrayBooks[i].weeks_on_list}</p>
-            <p>Description: ${bookList[i].description}</p>
+            <p><b>Weeks on chart:</b> ${arrayBooks[i].weeks_on_list}</p>
+            <p><b>Description:</b> ${bookList[i].description}</p>
             <a href=${bookList[i].amazon_product_url} target="_blank"}>BUY</a>
             <button style = "button" id="addFav${i}">Add to Favorites</button>`
         canvas.appendChild(card);
@@ -144,8 +144,8 @@ function printFavs(favs) {
         let card = document.createElement("div")
         card.setAttribute("class", "bookCard")
         card.innerHTML =
-            `<h3>#${fav.title}</h3>
-            <p>Description: ${fav.description}</p>
+            `<h3>${fav.title}</h3>
+            <p><b>Description:</b> ${fav.description}</p>
             <a href=${fav.buy} target="_blank"}>BUY</a>`
         canvasFavs.appendChild(card);
     })
