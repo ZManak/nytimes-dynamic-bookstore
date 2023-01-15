@@ -46,33 +46,35 @@ function readOne(id) {
 }
 
 const signUpUser = (email, password) => {
-    firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Signed in
-            let user = userCredential.user;
-            console.log(`se ha registrado ${user.email} ID:${user.uid}`)
-            alert(`se ha registrado ${user.email} ID:${user.uid}`)
-            // ...
-            // Guarda El usuario en Firestore
-            createUser({
-                id: user.uid,
-                email: user.email
-            });
-        })
-        .catch((error) => {
-            let errorCode = error.code;
-            let errorMessage = error.message;
-            console.log("Error en el sistema" + error.message);
-        });
+  firebase
+    .auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      let user = userCredential.user;
+      console.log(`se ha registrado ${user.email} ID:${user.uid}`)
+      alert(`se ha registrado ${user.email} ID:${user.uid}`)
+      createUser({
+        id: user.uid,
+        email: user.email
+      });
+    })
+    .catch((error) => {
+      let errorCode = error.code;
+      let errorMessage = error.message;
+      console.log("Error en el sistema" + errorCode + errorMessage);
+    });
 };
 
-document.getElementById("signup").addEventListener("click", function () {
-    let email = document.querySelector("#email").value;
-    let pass = document.querySelector("#password").value;
-    signUpUser(email, pass)
-  })
+document.getElementById("signUpForm").addEventListener("submit", function (event) {
+  event.preventDefault()
+  let email = document.querySelector("#email").value;
+  let pass = document.querySelector("#password").value;
+  let pass2 = document.querySelector("#password2").value;
+  if (pass === pass2) {
+     signUpUser(email, pass);
+  } else {
+    alert("Passwords did not match")
+  }
+})
 
 
 const signInUser = (email, password) => {
@@ -103,42 +105,41 @@ const signOut = () => {
   });
 }
 
-document.getElementById("login").addEventListener("click", function () {
-    let email = document.querySelector("#uname").value;
-    let password = document.querySelector("#psw").value;
-    document.location.assign("../index.html");
-    signInUser(email, password);
-  })
+document.getElementById("signInForm").addEventListener("submit", function (event) {
+  event.preventDefault()
+  let email = document.querySelector("#uname").value;
+  let password = document.querySelector("#psw").value;
+  signInUser(email, password);
+})
 
-  document.getElementById("signup").addEventListener("click", function () {
-    let email = document.querySelector("#email").value;
-    let pass = document.querySelector("#password").value;
-    signUpUser(email, pass);
-  })
-
-  function getAvatar(userID) {
-    return new Promise((resolve, reject) => {
-        getUserById(userID)
-            .then((user) => {
-                resolve(user.data().avatar)
-            }).catch((err) => reject(err))
-    })
-}
-
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      let linkLogin = document.getElementById("session");
-      linkLogin.innerHTML = `Loged as ${user.email}`
-      getAvatar(firebase.auth().currentUser.uid)
-        .then((avatar) => {printAvatar(avatar.pic)})
-      document.getElementById("logout").addEventListener("click", function () {
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    let linkLogin = document.getElementById("session");
+    linkLogin.style.display = "none";
+    linkLogin.innerHTML = `Loged as ${user.email}`
+    getAvatar(firebase.auth().currentUser.uid)
+      .then((avatar) => { printAvatar(avatar.pic) })
+    document.getElementById("avatar").style.display = "block"
+    document.getElementById("logout").addEventListener("click", function () {
       signOut();
-    })} else {
-      document.getElementById("session").innerHTML = "Login/Sign Up";
-      document.getElementById("logout").style.display = "none";
-      document.getElementById("addAvatar").style.display = "none";
-    }
-  });
+    })
+  } else {
+    document.getElementById("session").innerHTML = "Login/Sign Up";
+    document.getElementById("avatar").style.display = "none"
+    document.getElementById("logout").style.display = "none";
+    document.getElementById("addAvatar").style.display = "none";
+    document.getElementById("favorites").style.display = "none";
+  }
+});
+
+function getAvatar(userID) {
+  return new Promise((resolve, reject) => {
+    getUserById(userID)
+      .then((user) => {
+        resolve(user.data().avatar)
+      }).catch((err) => reject(err))
+  })
+}
 
 // Listener de usuario en el sistema
 // Controlar usuario logado

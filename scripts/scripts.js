@@ -165,11 +165,11 @@ function addAvatar(userID, url, callback) {
 }
 
 const printAvatar = (url) => {
-    let picture = document.createElement("img");
+    let picture = document.getElementById("avatar");
     picture.setAttribute('src', url);
-    picture.setAttribute('id', 'avatar');
-    picture.setAttribute('styles', 'max-width: 100px');
-    document.getElementById("pfp").appendChild(picture)
+    // picture.setAttribute('id', 'avatar');
+    // picture.setAttribute('styles', 'max-width: 100px');
+    //document.getElementById("pfp").appendChild(picture)
 }
 
 document.getElementById("addAvatar").addEventListener("click", () => {
