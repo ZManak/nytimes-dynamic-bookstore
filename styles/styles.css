@@ -1,0 +1,203 @@
+@font-face {
+  font-family: 'Homemade Apple';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/homemadeapple/v18/Qw3EZQFXECDrI2q789EKQZJob0x6XHg.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+* {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+html {
+  min-height: 100vh;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0px;
+  color: whitesmoke;
+  background-color: black;
+  min-height: 75vh;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  margin: 0px;
+  padding: 15px;
+  text-align: center;
+  background-color: whitesmoke;
+  border-bottom: 5px solid black;
+}
+
+footer {
+  margin: 0px;
+  padding: 5px;
+  background-color: whitesmoke;
+  text-align: center;
+  position: relative;
+  width: 100%;
+  bottom: 0px;
+}
+
+h1 {
+  font-family: 'Licorice';
+  font-size: 50px;
+  text-align: center;
+  margin: 10px 0px;
+}
+
+button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  width: 50%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.canvasCat,
+.canvasBooks,
+.canvasFavs {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  gap: 10px;
+}
+
+.catCard,
+.bookCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 15px;
+  border-radius: 15px;
+  background-color: whitesmoke;
+  color: black;
+}
+
+.bookImg {
+  width: 200px;
+  height: 300px;
+}
+
+#NYTlogo {
+  max-width: 80vw;
+}
+
+#gif {
+  height: 150px;
+  width: 150px;
+}
+
+#pfp {
+  display: flex;
+  justify-content: center;
+
+}
+
+#avatar {
+  display: none;
+  width: 30%;
+  border-radius: 50%;
+}
+
+#volver {
+  padding: 15px;
+  background-color: #f44336;
+  color: whitesmoke;
+  margin: 20px 0px 10px;
+}
+
+/*LOGS*/
+form {
+  width: 75vw;
+  margin: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+input[type=text],
+input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.container {
+  padding: 16px;
+}
+
+@media screen and (min-width: 600px){
+  h1{
+    font-size: 50px;
+  }
+
+  .navButton{
+    max-width: 25vw;
+  }
+  
+.canvasCat,
+.canvasBooks,
+.canvasFavs {
+  width: 90vw;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 15px;
+  gap: 10px;
+}
+
+.catCard,
+.bookCard {
+  width: 30vw;
+  padding: 15px;
+  border-radius: 15px;
+  background-color: whitesmoke;
+  color: black;
+}
+
+  #title{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  #titleLogo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  #NYTlogo{
+    width: 30vw;
+  }
+  
+  #avatar{
+    max-width: 150px;
+  }
+  
+}
