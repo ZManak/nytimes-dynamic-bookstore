@@ -1,2 +1,2 @@
 # nytimes-dynamic-bookstore
-A dynamic frontend bookstore fetched from de NY Times API
+A dynamic frontend bookstore fetched from The New York Times API
