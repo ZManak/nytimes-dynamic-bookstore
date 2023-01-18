@@ -24,6 +24,7 @@
     <div id="nav">
       <button id="session" class="navButton">Login/Sign Up</button>
       <button type="button" class="navButton" id="favorites">Check Favorites</button>
+      <input  id="fileSelect" type="file" accept="image/png, image/jpeg">
       <button id="addAvatar" class="navButton">Change Avatar</button>
       <button type="button" class="navButton" id="logout">Log Out</button>
 
@@ -72,7 +73,7 @@
 
           <label for="psw2"><b>Repeat Password</b></label>
           <input type="password" placeholder="Repeat Password" name="psw" id="password2" required>
-          
+
           <button type="submit" class="signupbtn" id="signup">Sign Up</button>
         </div>
 
@@ -89,6 +90,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-storage.js"></script>
   <script src="scripts/scripts.js"></script>
 </body>
 
