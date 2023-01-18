@@ -234,7 +234,7 @@ function printFavs(favs) {
     })
 }
 
-function storeAvatar(userID, url) {
+function addAvatar(userID, url) {
     getUserById(userID)
         .then((user) => {
             if (!user.data().hasOwnProperty('avatar')) {
@@ -243,7 +243,7 @@ function storeAvatar(userID, url) {
                 user.ref.update({ avatar: url })
             }
         })
-    alert('Stored avatar')
+    alert('Added avatar')
 }
 
 function uploadAvatar(event) {{
@@ -255,14 +255,13 @@ function uploadAvatar(event) {{
             'contentType': file.type
         };
 
+        // Push to child path.
         storageRef.child('images/' + file.name).put(file, metadata).then(function (snapshot) {
+            console.log('Uploaded', snapshot.totalBytes, 'bytes.');
             console.log('File metadata:', snapshot.metadata);
             // Let's get a download URL for the file.
             snapshot.ref.getDownloadURL().then(function (url) {
-                storeAvatar(firebase.auth().currentUser.uid, url);
-                printAvatar(url);
                 console.log('File available at', url);
-                console.log('Stored in user ', firebase.auth().currentUser.uid)
             });
         }).catch(function (error) {
             console.error('Upload failed:', error);
@@ -304,10 +303,8 @@ document.getElementById("addAvatar").addEventListener("click", () => {
     }
     });
 
- 
-document.getElementById('fileSelect').addEventListener('change',           uploadAvatar
-    
-)
+window.onload = function () {
+    document.getElementById('fileSelect').addEventListener('change', uploadAvatar)}
 
 document.getElementById("favorites").addEventListener("click", () => {
     getFavs(firebase.auth().currentUser.uid).then((favs) => printFavs(favs));
