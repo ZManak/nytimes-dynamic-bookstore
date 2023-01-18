@@ -9,6 +9,16 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);// Inicializaar app Firebase
 const db = firebase.firestore();
+const storageRef = firebase.storage().ref();
+
+let canvasCategories = document.querySelector(".canvasCat");
+let canvasBooks = document.querySelector(".canvasBooks")
+let canvasFavs = document.querySelector(".canvasFavs")
+let login = document.getElementById("log")
+const arrayCategories = [];
+const arrayBooks = [];
+const botones = [];
+const arrayFavs = [];
 
 const createUser = (user) => {
     db.collection("users")
@@ -16,7 +26,6 @@ const createUser = (user) => {
         .then((docRef) => console.log("Document written with ID: ", docRef.id))
         .catch((error) => console.error("Error adding document: ", error));
 };
-
 
 const signUpUser = (email, password) => {
     firebase
@@ -92,16 +101,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         console.log("no hay usuarios en el sistema");
     }
 });
-
-
-let canvasCategories = document.querySelector(".canvasCat");
-let canvasBooks = document.querySelector(".canvasBooks")
-let canvasFavs = document.querySelector(".canvasFavs")
-let login = document.getElementById("log")
-const arrayCategories = [];
-const arrayBooks = [];
-const botones = [];
-const arrayFavs = [];
 
 async function getCategories() {
     let resp = await fetch("https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A");
@@ -247,6 +246,30 @@ function addAvatar(userID, url) {
     alert('Added avatar')
 }
 
+function uploadAvatar(event) {{
+        event.stopPropagation();
+        event.preventDefault();
+        let file = event.target.files[0];
+
+        var metadata = {
+            'contentType': file.type
+        };
+
+        // Push to child path.
+        storageRef.child('images/' + file.name).put(file, metadata).then(function (snapshot) {
+            console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+            console.log('File metadata:', snapshot.metadata);
+            // Let's get a download URL for the file.
+            snapshot.ref.getDownloadURL().then(function (url) {
+                console.log('File available at', url);
+            });
+        }).catch(function (error) {
+            console.error('Upload failed:', error);
+        });
+    }
+    alert('Uploaded avatar')
+}
+
 function getAvatar(userID) {
     return new Promise((resolve, reject) => {
         getUserById(userID)
@@ -275,12 +298,13 @@ document.getElementById("session").addEventListener("click", () => {
 })
 
 document.getElementById("addAvatar").addEventListener("click", () => {
-    const url = prompt("Introduce la url de tu foto");
-    addAvatar(firebase.auth().currentUser.uid, {
-        pic: url
-    },
-        printAvatar(url))
-})
+    if (document.getElementById("fileSelect")) {
+        document.getElementById("fileSelect").click();
+    }
+    });
+
+window.onload = function () {
+    document.getElementById('fileSelect').addEventListener('change', uploadAvatar)}
 
 document.getElementById("favorites").addEventListener("click", () => {
     getFavs(firebase.auth().currentUser.uid).then((favs) => printFavs(favs));
