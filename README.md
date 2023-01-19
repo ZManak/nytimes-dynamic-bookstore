@@ -8,6 +8,6 @@ Each book contains a functional BUY anchor redirecting to Amazon (I would person
 - "Burger" menu = win main space.
 - Slide view for books.
 - Delete repeated favorite books.
-- Upload local img to Cloud Storage => avatar
+- (x)Upload local img to Cloud Storage => avatar
 --------
 https://nytimes-dynamic-bookstore.vercel.app/
