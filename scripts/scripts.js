@@ -202,16 +202,35 @@ function getFavs(userID) {
 }
 
 function printFavs(favs) {
-    favs.forEach((fav) => {
+    favs.forEach((fav, i) => {
         let card = document.createElement("div")
         card.setAttribute("class", "bookCard")
         card.innerHTML =
             `<h3>${fav.title}</h3>
             <p><b>Description:</b> ${fav.description}</p>
-            <a href=${fav.buy} target="_blank"}>BUY</a>`
+            <a href=${fav.buy} target="_blank"}>BUY</a>
+            <button id="remove${i}">REMOVE FAVORITE</button>`
         canvasFavs.appendChild(card);
-    })
-}
+        
+        const favBook =
+        {
+            buy: fav.buy,
+            description: fav.description,
+            title: fav.title
+        }
+
+        document.getElementById(`remove${i}`).addEventListener('click', () => {
+            removeFav(firebase.auth().currentUser.uid, favBook);
+        })}
+    )}
+
+function removeFav (userID, bookObject){
+    getUserById(userID)
+        .then ((user) => {
+        user.ref.update({favs: firebase.firestore.FieldValue.arrayRemove(bookObject)})
+        alert("Removed. Reload to update list");
+        })
+    }
 
 function addAvatar(userID, url) {
     getUserById(userID)
