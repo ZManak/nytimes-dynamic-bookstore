@@ -75,27 +75,6 @@ const signOut = () => {
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-        let linkLogin = document.getElementById("session");
-        linkLogin.style.display = "none";
-        getAvatar(firebase.auth().currentUser.uid)
-            .then((avatar) => { printAvatar(avatar.pic) })
-        document.getElementById("avatar").style.display = "block"
-        document.getElementById("log").style.display = "none"
-        document.getElementById("logout").addEventListener("click", function () {
-            signOut();
-            document.location.reload("true")
-        })
-    } else {
-        document.getElementById("session").style.display = "block";
-        document.getElementById("avatar").style.display = "none"
-        document.getElementById("logout").style.display = "none";
-        document.getElementById("addAvatar").style.display = "none";
-        document.getElementById("favorites").style.display = "none";
-    }
-});
-
-firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
         console.log(`Está en el sistema:${user.email} ${user.uid}`);
     } else {
         console.log("no hay usuarios en el sistema");
@@ -261,7 +240,10 @@ function uploadAvatar(event) {{
             console.log('File metadata:', snapshot.metadata);
             // Let's get a download URL for the file.
             snapshot.ref.getDownloadURL().then(function (url) {
-                console.log('File available at', url);
+                console.log('File available at', url)
+                printAvatar(url);
+                addAvatar(firebase.auth().currentUser.uid, url);
+                console.log("File stored");
             });
         }).catch(function (error) {
             console.error('Upload failed:', error);
@@ -303,8 +285,7 @@ document.getElementById("addAvatar").addEventListener("click", () => {
     }
     });
 
-window.onload = function () {
-    document.getElementById('fileSelect').addEventListener('change', uploadAvatar)}
+document.getElementById('fileSelect').addEventListener('change', uploadAvatar)
 
 document.getElementById("favorites").addEventListener("click", () => {
     getFavs(firebase.auth().currentUser.uid).then((favs) => printFavs(favs));
@@ -331,3 +312,24 @@ document.getElementById("signUpForm").addEventListener("submit", function (event
         alert("Passwords did not match")
     }
 })
+
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        let linkLogin = document.getElementById("session");
+        linkLogin.style.display = "none";
+        getAvatar(firebase.auth().currentUser.uid)
+            .then((url) => { printAvatar(url) })
+        document.getElementById("avatar").style.display = "block"
+        document.getElementById("log").style.display = "none"
+        document.getElementById("logout").addEventListener("click", function () {
+            signOut();
+            document.location.reload("true")
+        })
+    } else {
+        document.getElementById("session").style.display = "block";
+        document.getElementById("avatar").style.display = "none"
+        document.getElementById("logout").style.display = "none";
+        document.getElementById("addAvatar").style.display = "none";
+        document.getElementById("favorites").style.display = "none";
+    }
+});
