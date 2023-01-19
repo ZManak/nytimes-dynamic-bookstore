@@ -318,7 +318,12 @@ firebase.auth().onAuthStateChanged(function (user) {
         let linkLogin = document.getElementById("session");
         linkLogin.style.display = "none";
         getAvatar(firebase.auth().currentUser.uid)
-            .then((url) => { printAvatar(url) })
+            .then((url) => {
+                if (url === undefined) {
+                    getElementById("avatar").setAttribute("src", "assets/logos/defaultAvatar.png")
+                } else {
+                    printAvatar(url)
+                }})
         document.getElementById("avatar").style.display = "block"
         document.getElementById("log").style.display = "none"
         document.getElementById("logout").addEventListener("click", function () {
