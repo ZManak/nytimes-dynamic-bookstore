@@ -9,6 +9,16 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);// Inicializaar app Firebase
 const db = firebase.firestore();
+const storageRef = firebase.storage().ref();
+
+let canvasCategories = document.querySelector(".canvasCat");
+let canvasBooks = document.querySelector(".canvasBooks")
+let canvasFavs = document.querySelector(".canvasFavs")
+let login = document.getElementById("log")
+const arrayCategories = [];
+const arrayBooks = [];
+const botones = [];
+const arrayFavs = [];
 
 const createUser = (user) => {
     db.collection("users")
@@ -16,7 +26,6 @@ const createUser = (user) => {
         .then((docRef) => console.log("Document written with ID: ", docRef.id))
         .catch((error) => console.error("Error adding document: ", error));
 };
-
 
 const signUpUser = (email, password) => {
     firebase
@@ -66,42 +75,11 @@ const signOut = () => {
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-        let linkLogin = document.getElementById("session");
-        linkLogin.style.display = "none";
-        getAvatar(firebase.auth().currentUser.uid)
-            .then((avatar) => { printAvatar(avatar.pic) })
-        document.getElementById("avatar").style.display = "block"
-        document.getElementById("log").style.display = "none"
-        document.getElementById("logout").addEventListener("click", function () {
-            signOut();
-            document.location.reload("true")
-        })
-    } else {
-        document.getElementById("session").style.display = "block";
-        document.getElementById("avatar").style.display = "none"
-        document.getElementById("logout").style.display = "none";
-        document.getElementById("addAvatar").style.display = "none";
-        document.getElementById("favorites").style.display = "none";
-    }
-});
-
-firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
         console.log(`Está en el sistema:${user.email} ${user.uid}`);
     } else {
         console.log("no hay usuarios en el sistema");
     }
 });
-
-
-let canvasCategories = document.querySelector(".canvasCat");
-let canvasBooks = document.querySelector(".canvasBooks")
-let canvasFavs = document.querySelector(".canvasFavs")
-let login = document.getElementById("log")
-const arrayCategories = [];
-const arrayBooks = [];
-const botones = [];
-const arrayFavs = [];
 
 async function getCategories() {
     let resp = await fetch("https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=GAcpHtEABQGQmAlDrXlHGWSjtTBLAo3A");
@@ -224,16 +202,35 @@ function getFavs(userID) {
 }
 
 function printFavs(favs) {
-    favs.forEach((fav) => {
+    favs.forEach((fav, i) => {
         let card = document.createElement("div")
         card.setAttribute("class", "bookCard")
         card.innerHTML =
             `<h3>${fav.title}</h3>
             <p><b>Description:</b> ${fav.description}</p>
-            <a href=${fav.buy} target="_blank"}>BUY</a>`
+            <a href=${fav.buy} target="_blank"}>BUY</a>
+            <button id="remove${i}">REMOVE FAVORITE</button>`
         canvasFavs.appendChild(card);
-    })
-}
+        
+        const favBook =
+        {
+            buy: fav.buy,
+            description: fav.description,
+            title: fav.title
+        }
+
+        document.getElementById(`remove${i}`).addEventListener('click', () => {
+            removeFav(firebase.auth().currentUser.uid, favBook);
+        })}
+    )}
+
+function removeFav (userID, bookObject){
+    getUserById(userID)
+        .then ((user) => {
+        user.ref.update({favs: firebase.firestore.FieldValue.arrayRemove(bookObject)})
+        alert("Removed. Reload to update list");
+        })
+    }
 
 function addAvatar(userID, url) {
     getUserById(userID)
@@ -245,6 +242,33 @@ function addAvatar(userID, url) {
             }
         })
     alert('Added avatar')
+}
+
+function uploadAvatar(event) {{
+        event.stopPropagation();
+        event.preventDefault();
+        let file = event.target.files[0];
+
+        var metadata = {
+            'contentType': file.type
+        };
+
+        // Push to child path.
+        storageRef.child('images/' + file.name).put(file, metadata).then(function (snapshot) {
+            console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+            console.log('File metadata:', snapshot.metadata);
+            // Let's get a download URL for the file.
+            snapshot.ref.getDownloadURL().then(function (url) {
+                console.log('File available at', url)
+                printAvatar(url);
+                addAvatar(firebase.auth().currentUser.uid, url);
+                console.log("File stored");
+            });
+        }).catch(function (error) {
+            console.error('Upload failed:', error);
+        });
+    }
+    alert('Uploaded avatar')
 }
 
 function getAvatar(userID) {
@@ -275,12 +299,12 @@ document.getElementById("session").addEventListener("click", () => {
 })
 
 document.getElementById("addAvatar").addEventListener("click", () => {
-    const url = prompt("Introduce la url de tu foto");
-    addAvatar(firebase.auth().currentUser.uid, {
-        pic: url
-    },
-        printAvatar(url))
-})
+    if (document.getElementById("fileSelect")) {
+        document.getElementById("fileSelect").click();
+    }
+    });
+
+document.getElementById('fileSelect').addEventListener('change', uploadAvatar)
 
 document.getElementById("favorites").addEventListener("click", () => {
     getFavs(firebase.auth().currentUser.uid).then((favs) => printFavs(favs));
@@ -307,3 +331,29 @@ document.getElementById("signUpForm").addEventListener("submit", function (event
         alert("Passwords did not match")
     }
 })
+
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        let linkLogin = document.getElementById("session");
+        linkLogin.style.display = "none";
+        getAvatar(firebase.auth().currentUser.uid)
+            .then((url) => {
+                if (url === undefined) {
+                    getElementById("avatar").setAttribute("src", "assets/logos/defaultAvatar.png")
+                } else {
+                    printAvatar(url)
+                }})
+        document.getElementById("avatar").style.display = "block"
+        document.getElementById("log").style.display = "none"
+        document.getElementById("logout").addEventListener("click", function () {
+            signOut();
+            document.location.reload("true")
+        })
+    } else {
+        document.getElementById("session").style.display = "block";
+        document.getElementById("avatar").style.display = "none"
+        document.getElementById("logout").style.display = "none";
+        document.getElementById("addAvatar").style.display = "none";
+        document.getElementById("favorites").style.display = "none";
+    }
+});
